@@ -12,14 +12,22 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>5.6.2</junit.version>
+        <checkstyle.version>3.1.1</checkstyle.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.4.2</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>${checkstyle.version}</version>
         </dependency>
     </dependencies>
 
@@ -33,10 +41,12 @@
                     <failIfNoTests>true</failIfNoTests>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>
+
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -45,6 +55,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -52,29 +63,52 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
+
                     <execution>
-                        <id>default-check</id>
+                        <id>check</id>
                         <goals>
                             <goal>check</goal>
                         </goals>
-                    <configuration>
-                        <rules>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <rules>
                         <rule>
                             <limits>
                                 <limit>
-                                    <counter>INSTRUCTION</counter>
+                                    <counter>BRANCH</counter>
                                     <value>COVEREDRATIO</value>
                                     <minimum>100%</minimum>
                                 </limit>
                             </limits>
                         </rule>
                     </rules>
-                    </configuration>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <encoding>UTF-8</encoding>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>
+                    <linkXRef>false</linkXRef>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
 </project>
-
 
